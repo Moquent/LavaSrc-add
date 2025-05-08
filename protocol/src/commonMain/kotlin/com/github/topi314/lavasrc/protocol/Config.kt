@@ -68,3 +68,18 @@ data class YtdlpConfig(
     val customLoadArgs: List<String>? = null,
     val customPlaybackArgs: List<String>? = null,
 )
+
+@Serializable
+data class CustomSrcConfig(
+    val key: String? = null,
+    val baseUrl: String? = null,
+    val name: String? = null,
+    val userAgent: String? = null
+)
+
+@Serializable
+data class MCDNConfig(
+    val apiKey: String? = null,
+    val baseUrl: String? = null,
+    val userAgent: String? = null
+)
