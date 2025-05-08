@@ -18,6 +18,8 @@ public class SourcesConfig {
 	private boolean qobuz = false;
 	private boolean tidal = false;
 	private boolean ytdlp = false;
+	private boolean customSrc = false;
+	private boolean mcdn = false;
 
 	public boolean isSpotify() {
 		return this.spotify;
@@ -97,5 +99,21 @@ public class SourcesConfig {
 
 	public void setYtdlp(boolean ytdlp) {
 		this.ytdlp = ytdlp;
+	}
+
+	public boolean isCustomSrc() {
+		return customSrc;
+	}
+
+	public void setCustomSrc(boolean customSrc) {
+		this.customSrc = customSrc;
+	}
+	
+	public boolean isMcdn() {
+		return mcdn;
+	}
+
+	public void setMcdn(boolean mcdn) {
+		this.mcdn = mcdn;
 	}
 }

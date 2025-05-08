@@ -11,6 +11,8 @@ data class Config(
     val vkMusic: VkMusicConfig? = null,
     val qobuz: QobuzConfig? = null,
     val ytdlp: YtdlpConfig? = null,
+    val customSrc: CustomSrcConfig? = null,
+    val mcdn: MCDNConfig? = null,
 )
 
 @Serializable

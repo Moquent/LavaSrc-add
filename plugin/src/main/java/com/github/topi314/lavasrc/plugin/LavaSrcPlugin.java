@@ -18,6 +18,8 @@ import com.github.topi314.lavasrc.vkmusic.VkMusicSourceManager;
 import com.github.topi314.lavasrc.yandexmusic.YandexMusicSourceManager;
 import com.github.topi314.lavasrc.youtube.YoutubeSearchManager;
 import com.github.topi314.lavasrc.ytdlp.YtdlpAudioSourceManager;
+import com.github.topi314.lavasrc.customsrc.CustomSrcAudioManager;
+import com.github.topi314.lavasrc.mcdn.MCDNAudioManager;
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager;
 import dev.arbjerg.lavalink.api.AudioPlayerManagerConfiguration;
 import org.jetbrains.annotations.NotNull;
@@ -47,6 +49,8 @@ public class LavaSrcPlugin implements AudioPlayerManagerConfiguration, SearchMan
 	private TidalSourceManager tidal;
 	private QobuzAudioSourceManager qobuz;
 	private YtdlpAudioSourceManager ytdlp;
+	private CustomSrcAudioManager customMusic;
+	private MCDNAudioManager mcdnMusic;
 
 	public LavaSrcPlugin(
 		LavaSrcConfig pluginConfig,
@@ -61,7 +65,9 @@ public class LavaSrcPlugin implements AudioPlayerManagerConfiguration, SearchMan
 		VkMusicConfig vkMusicConfig,
 		TidalConfig tidalConfig,
 		QobuzConfig qobuzConfig,
-		YtdlpConfig ytdlpConfig
+		YtdlpConfig ytdlpConfig, 
+		CustomSrcConfig customSrcConfig, 
+		MCDNConfig mcdnConfig
 	) {
 		log.info("Loading LavaSrc plugin...");
 		this.sourcesConfig = sourcesConfig;
@@ -153,6 +159,21 @@ public class LavaSrcPlugin implements AudioPlayerManagerConfiguration, SearchMan
 		if (sourcesConfig.isYtdlp()) {
 			this.ytdlp = new YtdlpAudioSourceManager(ytdlpConfig.getPath(), ytdlpConfig.getSearchLimit(), ytdlpConfig.getCustomLoadArgs(), ytdlpConfig.getCustomPlaybackArgs());
 		}
+		if (sourcesConfig.isCustomSrc()) {
+			this.customMusic = new CustomSrcAudioManager(
+				customSrcConfig.getKey(),
+				customSrcConfig.getBaseUrl(),
+				customSrcConfig.getName(),
+				customSrcConfig.getUserAgent()
+			);
+		}
+		if (sourcesConfig.isMcdn()) {
+			this.mcdnMusic = new MCDNAudioManager(
+				mcdnConfig.getApiKey(),
+				mcdnConfig.getBaseUrl(),
+				mcdnConfig.getUserAgent()
+      		);
+		}
 	}
 
 	private boolean hasNewYoutubeSource() {
@@ -204,6 +225,14 @@ public class LavaSrcPlugin implements AudioPlayerManagerConfiguration, SearchMan
 			log.info("Registering YTDLP audio source manager...");
 			manager.registerSourceManager(this.ytdlp);
 		}
+		if (this.customMusic != null) {
+			log.info("Registering Custom music audio source manager...");
+			manager.registerSourceManager(this.customMusic);
+		}
+		if (this.mcdnMusic != null) {
+			log.info("Registering MCDN audio source manager...");
+			manager.registerSourceManager(this.mcdnMusic);
+		}
 		return manager;
 	}
 
@@ -233,6 +262,14 @@ public class LavaSrcPlugin implements AudioPlayerManagerConfiguration, SearchMan
 		if (this.vkMusic != null && this.sourcesConfig.isVkMusic()) {
 			log.info("Registering VK Music search manager...");
 			manager.registerSearchManager(this.vkMusic);
+		}
+		if (this.customMusic != null && this.sourcesConfig.isCustomSrc()) {
+			log.info("Registering custom search manager");
+			manager.registerSearchManager(this.customMusic);
+		}
+		if (this.mcdnMusic != null && this.sourcesConfig.isMcdn()) {
+			log.info("Registering MCDN search manager");
+			manager.registerSearchManager(this.mcdnMusic);
 		}
 		return manager;
 	}
